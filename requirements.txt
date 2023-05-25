@@ -1,10 +1,11 @@
 click
-Flask
+Flask~=2.3.2
 gunicorn
 itsdangerous
 Jinja2
 MarkupSafe
 Werkzeug
-pymongo
-certifi
-python-dotenv
+pymongo~=4.3.3
+certifi~=2023.5.7
+python-dotenv~=1.0.0
+PyYAML

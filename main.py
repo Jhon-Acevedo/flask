@@ -1,5 +1,9 @@
 import os
+import uuid
+
 from bson import json_util
+from flasgger import Swagger
+# from flask_restful_swagger_3 import Api
 from flask import Flask, jsonify, request, Response
 from db import database
 from dotenv import load_dotenv
@@ -7,13 +11,22 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-
 db = database.db_connection(mongo_uri=os.getenv("MONGO_URI"), db_name=os.getenv("DATABASE_NAME"))
+app.config['SWAGGER'] = {
+    "title": "API Products",
+    "version": "3.1.6",
+    "specs_route": "/docs/",
+    "description": "API Products",
+    "colorize": True,
+}
+swagger = Swagger(app)
 
+
+# api = Api(app)
 
 @app.route('/')
 def hello_world():
-    print(db['Products'].find_one({'index': 1}))
+    # print(db['Products'].find_one({'index': 1}))
     return 'BACKEND API PRODUCTS !'
 
 
@@ -21,6 +34,9 @@ def hello_world():
 # Products
 @app.route('/product')
 def get_products():
+    """
+    file: swagger/Product/get_products.yml
+    """
     try:
         response = json_util.dumps(db['Products'].find())
         return Response(response, mimetype='application/json')
@@ -30,10 +46,14 @@ def get_products():
 
 @app.route('/product/<int:id_product>')
 def get_product_by_id(id_product):
+    """
+    file: swagger/Product/get_product_by_id.yml
+    """
     try:
-        response = json_util.dumps(db['Products'].find_one({'index': id_product}))
+        response = db['Products'].find_one({'index': id_product})
         if response is None:
             return not_found('Product not found')
+        response = json_util.dumps(response)
         return Response(response, mimetype='application/json')
     except Exception as e:
         error_handler(e)
@@ -41,10 +61,15 @@ def get_product_by_id(id_product):
 
 @app.route('/product/<int:id_product>', methods=['DELETE'])
 def delete_product(id_product):
+    """
+    file: swagger/Product/delete_product.yml
+    """
     try:
         product = db['Products'].find_one({'index': id_product})
+        print(product)
         if product is None:
             return not_found('Product not found')
+        db['Products'].delete_one({'index': id_product})
         return jsonify({'message': 'Product deleted successfully'}), 204
     except Exception as e:
         error_handler(e)
@@ -52,6 +77,9 @@ def delete_product(id_product):
 
 @app.route("/product/<int:id_product>", methods=['PUT'])
 def update_product(id_product):
+    """
+    file: swagger/Product/update_product.yml
+    """
     try:
         product = db['Products'].find_one({'index': id_product})
         if product is None:
@@ -64,22 +92,15 @@ def update_product(id_product):
 
 @app.route('/product', methods=['POST'])
 def create_product():
+    """
+    file: swagger/Product/create_product.yml
+    """
     try:
         product = db['Products'].find_one({'index': request.json['index']})
         if product is not None:
             return jsonify({'message': 'Product already exists'}), 409
-        product = {
-            "index": request.json['index'],
-            "category": request.json['category'],
-            "imageUrl": request.json['imageUrl'],
-            "inStock": request.json['inStock'],
-            "price": request.json['price'],
-            "product_name": request.json['product_name'],
-            "description": request.json['description'],
-            "rating": request.json['rating'],
-            "reviews": request.json['reviews'],
-            "features": request.json['features']
-        }
+        product = request.json
+        product["_id"] = str(uuid.uuid4())
         db['Products'].insert_one(product)
         return jsonify({'message': 'Product created successfully'}), 201
     except Exception as e:

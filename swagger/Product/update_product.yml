@@ -1,0 +1,29 @@
+Endpoint for update product
+---
+tags:
+  - product
+summary: Update product
+description: Update product
+operationId: updateProduct
+produces:
+  - application/json
+parameters:
+    - name: id_product
+      in: path
+      description: Product id
+      required: true
+      type: integer
+      format: int64
+    - name: body
+      in: body
+      description: Product object
+      required: true
+      schema:
+        $ref: '#/definitions/Product'
+responses:
+    '200':
+        description: Successful operation
+    '500':
+        description: Internal server error
+    '404':
+        description: Product not found

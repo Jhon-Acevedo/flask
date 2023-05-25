@@ -1,0 +1,68 @@
+Endpoint returns a list of products
+---
+tags:
+  - product
+summary: Get all products
+description: Get all products
+operationId: getProducts
+produces:
+  - application/json
+parameters: [ ]
+responses:
+  '200':
+    description: Successful operation
+    schema:
+      type: array
+      items:
+        $ref: '#/definitions/Product'
+  '404':
+    description: Product not found
+  '500':
+    description: Internal server error
+
+definitions:
+  Review:
+    type: object
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+      text:
+        type: string
+      rating:
+        type: number
+      date:
+        example: "2022-12-10"
+        format: date
+        pattern: "YYYY-MM-DD"
+        minLength: 0
+        maxLength: 10
+
+  Product:
+    type: object
+    properties:
+      index:
+        type: integer
+      category:
+        type: string
+      imageUrl:
+        type: string
+      inStock:
+        type: boolean
+      price:
+        type: number
+      product_name:
+        type: string
+      description:
+        type: string
+      rating:
+        type: number
+      features:
+        type: array
+        items:
+          type: string
+      reviews:
+        type: array
+        items:
+          $ref: '#/definitions/Review'

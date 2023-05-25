@@ -1,0 +1,23 @@
+Endpoint for create product
+---
+tags:
+  - product
+summary: Create product
+description: Create product
+operationId: createProduct
+produces:
+  - application/json
+parameters:
+    - name: body
+      in: body
+      description: Product object
+      required: true
+      schema:
+        $ref: '#/definitions/Product'
+responses:
+    '201':
+        description: Created product
+    '500':
+        description: Internal server error
+    '409':
+        description: Product already exists
