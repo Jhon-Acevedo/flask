@@ -1,16 +1,19 @@
+import os
 from bson import json_util
 from flask import Flask, jsonify, request, Response
-import os
-
 from db import database
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
-db = database.db_connection(mongo_uri=os.getenv("MONGO_URI"), db_name=os.getenv("MONGO_DBNAME"))
+db = database.db_connection(mongo_uri=os.getenv("MONGO_URI"), db_name=os.getenv("DATABASE_NAME"))
 
 
 @app.route('/')
 def hello_world():
+    print(db['Products'].find_one({'index': 1}))
     return 'BACKEND API PRODUCTS !'
 
 
