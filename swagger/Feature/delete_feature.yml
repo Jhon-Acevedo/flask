@@ -1,0 +1,21 @@
+Endpoint for delete feature by product id
+---
+tags:
+  - Feature
+summary: Delete feature by product id
+description: Delete feature by product id
+operationId: deleteFeatureByProductId
+produces:
+  - application/json
+parameters:
+    - name: id_product
+      in: path
+      description: Product id
+      required: true
+      type: integer
+    - name: feature
+      in: body
+      description: Feature object
+      required: true
+      schema:
+        $ref: '#/definitions/Feature'

@@ -1,0 +1,26 @@
+Endpoint for getting a review by product id
+---
+tags:
+  - Review
+summary: Get review by product id
+description: Get review by product id
+operationId: getReviewByProductId
+produces:
+  - application/json
+parameters:
+    - name: id_product
+      in: path
+      description: Product id
+      required: true
+      type: integer
+responses:
+    '200':
+        description: Successful operation
+        schema:
+        type: array
+        items:
+            $ref: '#/definitions/Review'
+    '404':
+        description: Review not found
+    '500':
+        description: Internal server error

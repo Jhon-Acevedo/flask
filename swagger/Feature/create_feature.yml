@@ -1,0 +1,40 @@
+Endpoint for create new feature for product
+---
+tags:
+  - Feature
+summary: Create new feature for product
+description: Create new feature for product
+operationId: createFeature
+produces:
+  - application/json
+parameters:
+    - name: id_product
+      in: path
+      description: Product id
+      required: true
+      type: integer
+    - name: feature
+      in: body
+      description: Feature object
+      required: true
+      schema:
+        $ref: '#/definitions/Feature'
+
+responses:
+    '200':
+        description: Successful operation
+        schema:
+        type: array
+        items:
+            $ref: '#/definitions/Feature'
+    '404':
+        description: Feature not found
+    '500':
+        description: Internal server error
+
+definitions:
+  Feature:
+    type: object
+    properties:
+      feature:
+        type: string

@@ -111,6 +111,9 @@ def create_product():
 # Reviews
 @app.route('/review/<int:id_product>')
 def get_reviews(id_product):
+    """
+    file: swagger/Review/get_review.yml
+    """
     try:
         product = db['Products'].find_one({'index': id_product})
         if product is None:
@@ -186,8 +189,12 @@ def get_review(id_product, id_review):
 # Features
 @app.route('/feature/<int:id_product>')
 def get_features(id_product):
+    """
+    file: swagger/Feature/get_features.yml
+    """
     try:
         product = db['Products'].find_one({'index': id_product})
+        print(product)
         if product is None:
             return not_found('Product not found')
         response = json_util.dumps(product['features'])
@@ -198,6 +205,9 @@ def get_features(id_product):
 
 @app.route('/feature/<int:id_product>', methods=['POST'])
 def create_feature(id_product):
+    """
+    file: swagger/Feature/create_feature.yml
+    """
     try:
         product = db['Products'].find_one({'index': id_product})
         if product is None:
@@ -211,6 +221,9 @@ def create_feature(id_product):
 
 @app.route('/feature/<int:id_product>', methods=['DELETE'])
 def delete_feature(id_product):
+    """
+    file: swagger/Feature/delete_feature.yml
+    """
     try:
         product = db['Products'].find_one({'index': id_product})
         if product is None:

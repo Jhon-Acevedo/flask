@@ -1,0 +1,22 @@
+Endpoint for get all features of product
+---
+tags:
+  - Feature
+summary: Get all features of product
+description: Get all features of product
+operationId: getFeaturesByProductId
+produces:
+  - application/json
+parameters:
+    - name: id_product
+      in: path
+      description: Product id
+      required: true
+      type: integer
+responses:
+    '200':
+      description: Successful operation
+    '404':
+        description: Product not found
+    '500':
+        description: Internal server error
