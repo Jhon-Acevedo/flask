@@ -1,7 +1,7 @@
 Endpoint for update product
 ---
 tags:
-  - product
+  - Product
 summary: Update product
 description: Update product
 operationId: updateProduct

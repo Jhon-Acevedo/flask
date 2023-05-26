@@ -1,7 +1,7 @@
 Endpoint return a single product
 ---
 tags:
-  - product
+  - Product
 summary: Get product by id
 description: Get product by id
 operationId: getProductById

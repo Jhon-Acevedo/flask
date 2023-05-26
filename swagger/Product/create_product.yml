@@ -1,7 +1,7 @@
 Endpoint for create product
 ---
 tags:
-  - product
+  - Product
 summary: Create product
 description: Create product
 operationId: createProduct

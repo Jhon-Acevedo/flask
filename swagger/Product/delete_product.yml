@@ -1,7 +1,7 @@
 Endpoint for delete product
 ---
 tags:
-  - product
+  - Product
 summary: Delete product
 description: Delete product
 operationId: deleteProduct
