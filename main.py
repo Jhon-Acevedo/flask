@@ -126,6 +126,9 @@ def get_reviews(id_product):
 
 @app.route('/review/<int:id_product>', methods=['POST'])
 def create_review(id_product):
+    """
+    file: swagger/Review/create_review.yml
+    """
     try:
         product = db['Products'].find_one({'index': id_product})
         if product is None:
@@ -140,6 +143,9 @@ def create_review(id_product):
 
 @app.route('/review/<int:id_product>/<int:id_review>', methods=['DELETE'])
 def delete_review(id_product, id_review):
+    """
+    file: swagger/Review/delete_review.yml
+    """
     try:
         product = db['Products'].find_one({'index': id_product})
         if product is None:
@@ -156,6 +162,9 @@ def delete_review(id_product, id_review):
 
 @app.route('/review/<int:id_product>/<int:id_review>', methods=['PUT'])
 def update_review(id_product, id_review):
+    """
+    file: swagger/Review/update_review.yml
+    """
     try:
         product = db['Products'].find_one({'index': id_product})
         if product is None:

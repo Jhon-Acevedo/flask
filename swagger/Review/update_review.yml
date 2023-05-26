@@ -1,0 +1,37 @@
+Endpoint for update review by product id
+---
+tags:
+  - Review
+summary: Update review by product id
+description: Update review by product id
+operationId: updateReviewByProductId
+produces:
+  - application/json
+parameters:
+  - name: id_product
+    in: path
+    description: Product id
+    required: true
+    type: integer
+  - name: id_review
+    in: path
+    description: Review id
+    required: true
+    type: integer
+  - name: body
+    in: body
+    description: Review object
+    required: true
+    schema:
+      $ref: '#/definitions/Review'
+responses:
+  '200':
+    description: Successful operation
+    schema:
+    type: array
+    items:
+      $ref: '#/definitions/Review'
+  '404':
+    description: Product or Review not found
+  '500':
+    description: Internal server error
