@@ -23,15 +23,32 @@ parameters:
     description: Review object
     required: true
     schema:
-      $ref: '#/definitions/Review'
+      $ref: '#/definitions/ReviewUpdate'
 responses:
   '200':
     description: Successful operation
     schema:
     type: array
     items:
-      $ref: '#/definitions/Review'
+      $ref: '#/definitions/ReviewUpdate'
   '404':
     description: Product or Review not found
   '500':
     description: Internal server error
+
+definitions:
+  ReviewUpdate:
+    type: object
+    properties:
+      username:
+        type: string
+      text:
+        type: string
+      rating:
+        type: number
+      date:
+        example: "2022-12-10"
+        format: date
+        pattern: "YYYY-MM-DD"
+        minLength: 0
+        maxLength: 10

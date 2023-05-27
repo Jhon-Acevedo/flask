@@ -17,10 +17,28 @@ responses:
     '200':
         description: Successful operation
         schema:
-        type: array
-        items:
+          type: array
+          items:
             $ref: '#/definitions/Review'
     '404':
         description: Product not found
     '500':
         description: Internal server error
+definitions:
+  Review:
+    type: object
+    properties:
+      id:
+        type: integer
+      username:
+        type: string
+      text:
+        type: string
+      rating:
+        type: number
+      date:
+        example: "2022-12-10"
+        format: date
+        pattern: "YYYY-MM-DD"
+        minLength: 0
+        maxLength: 10

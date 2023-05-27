@@ -160,13 +160,33 @@ def create_review(id_product):
         product = db['Products'].find_one({'index': id_product})
         if product is None:
             return not_found('Product not found')
-        review = search_id_review(request.json['id'], product['reviews'])
-        if review is not None:
-            return jsonify({'message': 'Review already exists'}), 409
-        review = request.json
-        product['reviews'].append(review)
-        db['Products'].update_one({'index': id_product}, {'$set': product})
-        return jsonify({'message': 'Review created successfully'}), 201
+        if product.get('reviews') is None:
+            product['reviews'] = []
+        validate = validate_create_review(request)
+        if validate is None:
+            review = request.json
+            product['reviews'].append(review)
+            db['Products'].update_one({'index': id_product}, {'$set': product})
+            return jsonify({'message': 'Review created successfully'}), 201
+        else:
+            return validate
+    except Exception as e:
+        error_handler(e)
+
+
+def validate_create_review(json):
+    try:
+        if json.json.get('id') is None:
+            return jsonify({'message': 'Rating is required'}), 400
+        if json.json.get('username') is None:
+            return jsonify({'message': 'Username is required'}), 400
+        if json.json.get('text') is None:
+            return jsonify({'message': 'Text is required'}), 400
+        if json.json.get('rating') is None:
+            return jsonify({'message': 'Rating is required'}), 400
+        if json.json.get('date') is None:
+            return jsonify({'message': 'Date is required'}), 400
+        return None
     except Exception as e:
         error_handler(e)
 
@@ -205,10 +225,13 @@ def update_review(id_product, id_review):
         review = search_id_review(id_review, product['reviews'])
         if review is None:
             return not_found('Review not found')
-        id_review = search_id_review(request.json['id'], product['reviews'])
-        # if id_review is not None:
-        #     return jsonify({'message': 'ID Review already exists'}), 409
-        product['reviews'][id_review] = request.json
+        review = product['reviews'][id_review]
+        if review is None:
+            return not_found('Review not found')
+        if request.json.get('id') is not None:
+            return jsonify({'message': 'Id cannot be updated'}), 400
+        review = request.json
+        product['reviews'][id_review] = review
         db['Products'].update_one({'index': id_product}, {'$set': product})
         return jsonify({'message': 'Review updated successfully'}), 200
     except Exception as e:
