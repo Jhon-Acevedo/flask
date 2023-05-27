@@ -1,21 +1,16 @@
-Endpoint for getting a review by product id
+Endpoint for getting all reviews by product id
 ---
 tags:
   - Review
-summary: Get review by product id
-description: Get review by product id
-operationId: getReviewByProductId
+summary: Get list review by product id
+description: Get list review by product id
+operationId: getListReviewByProductId
 produces:
   - application/json
 parameters:
     - name: id_product
       in: path
       description: Product id
-      required: true
-      type: integer
-    - name: id_review
-      in: path
-      description: Review id
       required: true
       type: integer
 responses:
@@ -26,6 +21,6 @@ responses:
         items:
             $ref: '#/definitions/Review'
     '404':
-        description: Product or Review not found
+        description: Product not found
     '500':
         description: Internal server error

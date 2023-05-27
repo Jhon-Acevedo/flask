@@ -18,12 +18,6 @@ parameters:
       description: Review id
       required: true
       type: integer
-    - name: body
-      in: body
-      description: Review object
-      required: true
-      schema:
-        $ref: '#/definitions/Review'
 
 responses:
     '200':

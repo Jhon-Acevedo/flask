@@ -26,7 +26,6 @@ swagger = Swagger(app)
 
 @app.route('/')
 def hello_world():
-    # print(db['Products'].find_one({'index': 1}))
     return 'BACKEND API PRODUCTS !'
 
 
@@ -66,7 +65,6 @@ def delete_product(id_product):
     """
     try:
         product = db['Products'].find_one({'index': id_product})
-        print(product)
         if product is None:
             return not_found('Product not found')
         db['Products'].delete_one({'index': id_product})
@@ -112,7 +110,7 @@ def create_product():
 @app.route('/review/<int:id_product>')
 def get_reviews(id_product):
     """
-    file: swagger/Review/get_review.yml
+    file: swagger/Review/get_list_review.yml
     """
     try:
         product = db['Products'].find_one({'index': id_product})
@@ -133,6 +131,9 @@ def create_review(id_product):
         product = db['Products'].find_one({'index': id_product})
         if product is None:
             return not_found('Product not found')
+        review = search_id_review(request.json['id'], product['reviews'])
+        if review is not None:
+            return jsonify({'message': 'Review already exists'}), 409
         review = request.json
         product['reviews'].append(review)
         db['Products'].update_one({'index': id_product}, {'$set': product})
@@ -150,6 +151,9 @@ def delete_review(id_product, id_review):
         product = db['Products'].find_one({'index': id_product})
         if product is None:
             return not_found('Product not found')
+        review = search_id_review(id_review, product['reviews'])
+        if review is None:
+            return not_found('Review not found')
         review = product['reviews'][id_review]
         if review is None:
             return not_found('Review not found')
@@ -169,9 +173,12 @@ def update_review(id_product, id_review):
         product = db['Products'].find_one({'index': id_product})
         if product is None:
             return not_found('Product not found')
-        review = product['reviews'][id_review]
+        review = search_id_review(id_review, product['reviews'])
         if review is None:
             return not_found('Review not found')
+        id_review = search_id_review(request.json['id'], product['reviews'])
+        # if id_review is not None:
+        #     return jsonify({'message': 'ID Review already exists'}), 409
         product['reviews'][id_review] = request.json
         db['Products'].update_one({'index': id_product}, {'$set': product})
         return jsonify({'message': 'Review updated successfully'}), 200
@@ -181,10 +188,16 @@ def update_review(id_product, id_review):
 
 @app.route('/review/<int:id_product>/<int:id_review>', methods=['GET'])
 def get_review(id_product, id_review):
+    """
+    file: swagger/Review/get_review.yml
+    """
     try:
         product = db['Products'].find_one({'index': id_product})
         if product is None:
             return not_found('Product not found')
+        review = search_id_review(id_review, product['reviews'])
+        if review is None:
+            return not_found('Review not found')
         review = product['reviews'][id_review]
         if review is None:
             return not_found('Review not found')
@@ -192,6 +205,13 @@ def get_review(id_product, id_review):
         return Response(response, mimetype='application/json')
     except Exception as e:
         error_handler(e)
+
+
+def search_id_review(id_review, reviews):
+    for review in reviews:
+        if review['id'] == id_review:
+            return review
+    return None
 
 
 #####################################################################################
@@ -203,7 +223,6 @@ def get_features(id_product):
     """
     try:
         product = db['Products'].find_one({'index': id_product})
-        print(product)
         if product is None:
             return not_found('Product not found')
         response = json_util.dumps(product['features'])
@@ -228,8 +247,8 @@ def create_feature(id_product):
         error_handler(e)
 
 
-@app.route('/feature/<int:id_product>', methods=['DELETE'])
-def delete_feature(id_product):
+@app.route('/feature/<int:id_product>/<string:feature>', methods=['DELETE'])
+def delete_feature(id_product, feature):
     """
     file: swagger/Feature/delete_feature.yml
     """
@@ -237,9 +256,32 @@ def delete_feature(id_product):
         product = db['Products'].find_one({'index': id_product})
         if product is None:
             return not_found('Product not found')
-        feature = request.json['feature']
-        db['Products'].update_one({'index': id_product}, {'$pull': {'features': feature}})
-        return jsonify({'message': 'Feature deleted successfully'}), 204
+        features = product['features']
+        for fea in features:
+            if fea == feature:
+                db['Products'].update_one({'index': id_product}, {'$pull': {'features': feature}})
+                return jsonify({'message': 'Feature deleted successfully'}), 204
+        return not_found('Feature not found')
+    except Exception as e:
+        error_handler(e)
+
+
+@app.route('/feature/<int:id_product>/<string:previous_feature>', methods=['PUT'])
+def update_feature(id_product, previous_feature):
+    """
+    file: swagger/Feature/update_feature.yml
+    """
+    try:
+        product = db['Products'].find_one({'index': id_product})
+        if product is None:
+            return not_found('Product not found')
+        features = product['features']
+        for feature in features:
+            if feature == previous_feature:
+                db['Products'].update_one({'index': id_product}, {'$pull': {'features': feature}})
+                db['Products'].update_one({'index': id_product}, {'$push': {'features': request.json['feature']}})
+                return jsonify({'message': 'Feature updated successfully'}), 200
+        return not_found('Feature not found')
     except Exception as e:
         error_handler(e)
 

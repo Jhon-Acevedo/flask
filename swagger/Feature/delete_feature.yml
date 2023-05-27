@@ -14,8 +14,14 @@ parameters:
       required: true
       type: integer
     - name: feature
-      in: body
-      description: Feature object
+      in: path
+      description: Feature
       required: true
-      schema:
-        $ref: '#/definitions/Feature'
+      type: string
+responses:
+    '204':
+        description: Successful operation
+    '404':
+        description: Product not found
+    '500':
+        description: Internal server error

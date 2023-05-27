@@ -1,0 +1,39 @@
+Endpoint for update feature by product id
+---
+tags:
+  - Feature
+summary: Update feature by product id
+description: Update feature by product id
+operationId: updateFeatureByProductId
+produces:
+  - application/json
+parameters:
+  - name: id_product
+    in: path
+    description: Product id
+    required: true
+    type: integer
+  - name: previous_feature
+    in: path
+    description: previous feature
+    required: true
+    type: string
+  - name: body
+    in: body
+    description: Feature object
+    required: true
+    schema:
+      $ref: '#/definitions/Feature'
+
+
+responses:
+  '200':
+    description: Successful operation
+    schema:
+    type: array
+    items:
+      $ref: '#/definitions/Feature'
+  '404':
+    description: Product or Featured not found
+  '500':
+    description: Internal server error
