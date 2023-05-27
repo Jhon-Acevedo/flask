@@ -18,12 +18,11 @@ parameters:
     description: previous feature
     required: true
     type: string
-  - name: body
-    in: body
-    description: Feature object
+  - name: new_feature
+    in: path
+    description: New feature
     required: true
-    schema:
-      $ref: '#/definitions/Feature'
+    type: string
 
 
 responses:

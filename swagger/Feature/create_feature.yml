@@ -14,11 +14,10 @@ parameters:
       required: true
       type: integer
     - name: feature
-      in: body
+      in: path
       description: Feature object
       required: true
-      schema:
-        $ref: '#/definitions/Feature'
+      type: string
 
 responses:
     '200':

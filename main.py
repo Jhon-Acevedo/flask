@@ -231,8 +231,8 @@ def get_features(id_product):
         error_handler(e)
 
 
-@app.route('/feature/<int:id_product>', methods=['POST'])
-def create_feature(id_product):
+@app.route('/feature/<int:id_product>/<string:feature>', methods=['POST'])
+def create_feature(id_product, feature):
     """
     file: swagger/Feature/create_feature.yml
     """
@@ -240,8 +240,13 @@ def create_feature(id_product):
         product = db['Products'].find_one({'index': id_product})
         if product is None:
             return not_found('Product not found')
-        feature = request.json['feature']
-        db['Products'].update_one({'index': id_product}, {'$push': {'features': feature}})
+        features = product['features']
+        print(features)
+        for fea in features:
+            if fea == feature:
+                return jsonify({'message': 'Feature already exists'}), 409
+        product['features'].append(feature)
+        db['Products'].update_one({'index': id_product}, {'$set': product})
         return jsonify({'message': 'Feature created successfully'}), 201
     except Exception as e:
         error_handler(e)
@@ -266,8 +271,8 @@ def delete_feature(id_product, feature):
         error_handler(e)
 
 
-@app.route('/feature/<int:id_product>/<string:previous_feature>', methods=['PUT'])
-def update_feature(id_product, previous_feature):
+@app.route('/feature/<int:id_product>/<string:previous_feature>/<string:new_feature>', methods=['PUT'])
+def update_feature(id_product, previous_feature, new_feature):
     """
     file: swagger/Feature/update_feature.yml
     """
@@ -276,10 +281,10 @@ def update_feature(id_product, previous_feature):
         if product is None:
             return not_found('Product not found')
         features = product['features']
-        for feature in features:
-            if feature == previous_feature:
-                db['Products'].update_one({'index': id_product}, {'$pull': {'features': feature}})
-                db['Products'].update_one({'index': id_product}, {'$push': {'features': request.json['feature']}})
+        for fea in features:
+            if fea == previous_feature:
+                db['Products'].update_one({'index': id_product}, {'$pull': {'features': previous_feature}})
+                db['Products'].update_one({'index': id_product}, {'$push': {'features': new_feature}})
                 return jsonify({'message': 'Feature updated successfully'}), 200
         return not_found('Feature not found')
     except Exception as e:
