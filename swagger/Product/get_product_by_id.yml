@@ -15,14 +15,14 @@ parameters:
     type: integer
     format: int64
 responses:
-    '200':
-        description: Successful operation
-        schema:
-        $ref: '#/definitions/Product'
-    '404':
-        description: Product not found
-    '500':
-        description: Internal server error
+  '200':
+    description: Successful operation
+    schema:
+      $ref: '#/definitions/ProductCreate'
+  '404':
+    description: Product not found
+  '500':
+    description: Internal server error
 
 definitions:
   Review:
@@ -48,27 +48,57 @@ definitions:
     properties:
       index:
         type: integer
-      category:
+      description:
         type: string
       imageUrl:
         type: string
       inStock:
         type: boolean
-      price:
-        type: number
+      category:
+        type: string
       product_name:
         type: string
-      description:
-        type: string
+      price:
+        type: number
       rating:
         type: number
-      features:
-        type: array
-        items:
-          type: string
+    example:
+      index: 0
+      description: "Description of product new"
+      imageUrl: "imageUrl"
+      inStock: true
+      category: "Category Product"
+      product_name: "Name of product new"
+      price: 12
+      rating: 14
+  ProductCreate:
+    type: object
+    properties:
+      index:
+        type: integer
+      description:
+        type: string
+      imageUrl:
+        type: string
+      inStock:
+        type: boolean
+      category:
+        type: string
+      product_name:
+        type: string
+      price:
+        type: number
+      rating:
+        type: number
       reviews:
         type: array
         items:
-          $ref: '#/definitions/Review'
+           $ref: '#/definitions/Review'
+      features:
+        type: array
+        items:
+           type: string
+
+
 
 

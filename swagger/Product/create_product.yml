@@ -14,6 +14,7 @@ parameters:
       required: true
       schema:
         $ref: '#/definitions/Product'
+
 responses:
     '201':
         description: Created product

@@ -19,7 +19,7 @@ parameters:
       description: Product object
       required: true
       schema:
-        $ref: '#/definitions/Product'
+        $ref: '#/definitions/ProductUpdate'
 responses:
     '200':
         description: Successful operation
@@ -27,3 +27,21 @@ responses:
         description: Internal server error
     '404':
         description: Product not found
+definitions:
+  ProductUpdate:
+    type: object
+    properties:
+      description:
+        type: string
+      imageUrl:
+        type: string
+      inStock:
+        type: boolean
+      category:
+        type: string
+      productName:
+        type: string
+      price:
+        type: number
+      rating:
+        type: number

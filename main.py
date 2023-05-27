@@ -82,6 +82,8 @@ def update_product(id_product):
         product = db['Products'].find_one({'index': id_product})
         if product is None:
             return not_found('Product not found')
+        if request.json.get('index') is not None:
+            return jsonify({'message': 'Index cannot be updated'}), 400
         db['Products'].update_one({'index': id_product}, {'$set': request.json})
         return jsonify({'message': 'Product updated successfully'}), 200
     except Exception as e:
@@ -94,13 +96,40 @@ def create_product():
     file: swagger/Product/create_product.yml
     """
     try:
-        product = db['Products'].find_one({'index': request.json['index']})
-        if product is not None:
-            return jsonify({'message': 'Product already exists'}), 409
-        product = request.json
-        product["_id"] = str(uuid.uuid4())
-        db['Products'].insert_one(product)
-        return jsonify({'message': 'Product created successfully'}), 201
+        validate = validate_create_product(request)
+        if validate is None:
+            product = db['Products'].find_one({'index': request.json['index']})
+            if product is not None:
+                return jsonify({'message': 'Product already exists'}), 409
+            product = request.json
+            product["_id"] = str(uuid.uuid4())
+            db['Products'].insert_one(product)
+            return jsonify({'message': 'Product created successfully'}), 201
+        else:
+            return validate
+    except Exception as e:
+        error_handler(e)
+
+
+def validate_create_product(json):
+    try:
+        if json.json.get('index') is None:
+            return jsonify({'message': 'Index is required'}), 400
+        if json.json.get('description') is None:
+            return jsonify({'message': 'description is required'}), 400
+        if json.json.get('imageUrl') is None:
+            return jsonify({'message': 'imageUrl is required'}), 400
+        if json.json.get('inStock') is None:
+            return jsonify({'message': 'InStock is required'}), 400
+        if json.json.get('category') is None:
+            return jsonify({'message': 'category is required'}), 400
+        if json.json.get('product_name') is None:
+            return jsonify({'message': 'product_name is required'}), 400
+        if json.json.get('price') is None:
+            return jsonify({'message': 'price is required'}), 400
+        if json.json.get('rating') is None:
+            return jsonify({'message': 'rating is required'}), 400
+        return None
     except Exception as e:
         error_handler(e)
 
@@ -240,8 +269,9 @@ def create_feature(id_product, feature):
         product = db['Products'].find_one({'index': id_product})
         if product is None:
             return not_found('Product not found')
+        if product.get('features') is None:
+            product['features'] = []
         features = product['features']
-        print(features)
         for fea in features:
             if fea == feature:
                 return jsonify({'message': 'Feature already exists'}), 409

@@ -14,7 +14,7 @@ responses:
     schema:
       type: array
       items:
-        $ref: '#/definitions/Product'
+        $ref: '#/definitions/ProductCreate'
   '404':
     description: Product not found
   '500':
@@ -38,31 +38,30 @@ definitions:
         pattern: "YYYY-MM-DD"
         minLength: 0
         maxLength: 10
-
-  Product:
+  ProductCreate:
     type: object
     properties:
       index:
         type: integer
-      category:
-        type: string
-      imageUrl:
-        type: string
-      inStock:
-        type: boolean
-      price:
-        type: number
-      product_name:
-        type: string
       description:
-        type: string
-      rating:
-        type: number
-      features:
-        type: array
-        items:
           type: string
+      imageUrl:
+          type: string
+      inStock:
+          type: boolean
+      category:
+          type: string
+      product_name:
+          type: string
+      price:
+          type: number
+      rating:
+          type: number
       reviews:
-        type: array
-        items:
-          $ref: '#/definitions/Review'
+          type: array
+          items:
+            $ref: '#/definitions/Review'
+      features:
+          type: array
+          items:
+            type: string
