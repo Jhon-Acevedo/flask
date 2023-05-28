@@ -10,3 +10,4 @@ certifi~=2023.5.7
 python-dotenv~=1.0.0
 PyYAML
 flasgger
+flask_cors
