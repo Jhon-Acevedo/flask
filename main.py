@@ -1,16 +1,16 @@
-import os
-import uuid
-
 from bson import json_util
 from flasgger import Swagger
-# from flask_restful_swagger_3 import Api
 from flask import Flask, jsonify, request, Response
 from db import database
 from dotenv import load_dotenv
+from flask_cors import CORS
+import os
+import uuid
 
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 db = database.db_connection(mongo_uri=os.getenv("MONGO_URI"), db_name=os.getenv("DATABASE_NAME"))
 app.config['SWAGGER'] = {
     "title": "API Products",
@@ -22,7 +22,6 @@ app.config['SWAGGER'] = {
 swagger = Swagger(app)
 
 
-# api = Api(app)
 
 @app.route('/')
 def hello_world():

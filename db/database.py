@@ -1,7 +1,5 @@
-from bson import json_util
-# from flask_pymongo import MongoClient
-import certifi
 from pymongo import MongoClient
+import certifi
 
 ca = certifi.where()
 
